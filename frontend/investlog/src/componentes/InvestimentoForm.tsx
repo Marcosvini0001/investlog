@@ -31,17 +31,30 @@ export default function InvestimentoForm({ onSalvar }: Props) {
     });
   };
 
+  const valorTotal = form.quantidade * form.valor_unitario;
+
   return (
   <div className="form">
     <h2>Novo Investimento</h2>
 
     <input name="nome" placeholder="Nome" onChange={handleChange} />
-    <input name="quantidade" placeholder="Quantidade" onChange={handleChange} />
-    <input name="valor_unitario" placeholder="Valor unitário" onChange={handleChange} />
+    <input name="quantidade" placeholder="Quantidade" type='number' onChange={handleChange} />
+    <input name="valor_unitario" placeholder="Valor unitário" type='number' onChange={handleChange} />
+    <p>Valor total: R$ {valorTotal.toFixed(2)}</p>
 
-    <button className="button" onClick={() => onSalvar(form)}>
-      Salvar
-    </button>
+    <button
+        className="button"
+        onClick={() => {
+          if (!form.nome || form.quantidade <= 0 || form.valor_unitario <= 0) {
+            alert('Preencha todos os campos corretamente');
+            return;
+          }
+
+          onSalvar(form);
+        }}
+      >
+        Salvar
+     </button>
   </div>
 );
 }

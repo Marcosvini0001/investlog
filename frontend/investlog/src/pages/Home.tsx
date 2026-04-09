@@ -20,6 +20,10 @@ export default function Home() {
     carregar();
   };
 
+  const totalInvestido = investimentos.reduce((acc, inv) => {
+  return acc + inv.valor_total;
+  }, 0);
+
   return (
   <div className="container">
     
@@ -44,7 +48,7 @@ export default function Home() {
             </div>
 
             <div className="valor">
-              R$ {inv.valor_total}
+              R$ {totalInvestido.toFixed(2)}
             </div>
           </li>
         ))}
