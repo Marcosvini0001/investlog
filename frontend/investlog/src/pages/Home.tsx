@@ -16,12 +16,18 @@ export default function Home() {
   }, []);
 
   const salvar = async (dados: InvestimentoInput) => {
-    await api.post('/investimentos', dados);
-    carregar();
+    try {
+      await api.post('/investimentos', dados);
+      carregar();
+    } catch (error: any) {
+      console.error("Erro ao salvar investimento:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Erro ao salvar investimento");
+    }
   };
 
   const totalInvestido = investimentos.reduce((acc, inv) => {
-  return acc + inv.valor_total;
+    const valor = Number(inv.valor_total);
+    return acc + (isNaN(valor) ? 0 : valor);
   }, 0);
 
   return (
@@ -55,7 +61,7 @@ export default function Home() {
         </div>
 
         <div className="valor">
-          R$ {inv.valor_total.toFixed(2)}
+          R$ {Number(inv.valor_total).toFixed(2)}
         </div>
       </li>
     ))}

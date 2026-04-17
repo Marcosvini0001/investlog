@@ -43,18 +43,23 @@ export default function InvestimentoForm({ onSalvar }: Props) {
     <p>Valor total: R$ {valorTotal.toFixed(2)}</p>
 
     <button
-        className="button"
-        onClick={() => {
-          if (!form.nome || form.quantidade <= 0 || form.valor_unitario <= 0) {
-            alert('Preencha todos os campos corretamente');
-            return;
-          }
+      className="button"
+      onClick={() => {
+        if (!form.nome || form.quantidade <= 0 || form.valor_unitario <= 0) {
+          alert('Preencha todos os campos corretamente');
+          return;
+        }
 
-          onSalvar(form);
-        }}
-      >
-        Salvar
-     </button>
+        onSalvar({
+          nome: form.nome,
+          tipo: form.tipo,
+          quantidade: form.quantidade,
+          valor_unitario: form.valor_unitario,
+        });
+      }}
+    >
+      Salvar
+    </button>
   </div>
 );
 }

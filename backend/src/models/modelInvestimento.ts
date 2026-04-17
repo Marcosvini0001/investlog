@@ -1,27 +1,48 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/database";
+import { User } from "./modelUsers";
 
-class Investimento extends Model {
+export class Investimento extends Model {
   public id!: number;
+  public userId!: number;
   public nome!: string;
-  public tipo!: string;
   public quantidade!: number;
-  public valor_unitario!: number;
   public valor_total!: number;
 }
 
 Investimento.init(
   {
-    nome: DataTypes.STRING,
-    tipo: DataTypes.STRING,
-    quantidade: DataTypes.FLOAT,
-    valor_unitario: DataTypes.FLOAT,
-    valor_total: DataTypes.FLOAT
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    quantidade: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    valor_total: {
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: false,
+    },
   },
   {
     sequelize,
-    modelName: 'Investimento'
+    tableName: "investimentos",
   }
 );
 
-export default Investimento;
+Investimento.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Investimento, { foreignKey: "userId" });

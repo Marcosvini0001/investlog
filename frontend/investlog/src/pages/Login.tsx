@@ -12,18 +12,16 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/auth/login", {
+      const res = await axios.post("http://localhost:3001/auth/login", {
         email,
         senha,
       });
 
-      localStorage.setItem("token", response.data.token);
-
+      localStorage.setItem('token', res.data.token);
       alert("Login realizado com sucesso!");
       navigate("/home");
-
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro no login");
+      alert(error.response?.data?.message || "Erro ao fazer login");
     }
   };
 
