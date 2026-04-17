@@ -28,7 +28,9 @@ export default function Home() {
   <div className="container">
     
     <div className="header">
-      <div className="logo">INVESTLOG</div>
+      <div className="logo">
+          <span>INVEST</span><span>LOG</span>
+        </div>
       <div className="subtitle">Controle inteligente de investimentos</div>
     </div>
 
@@ -37,23 +39,28 @@ export default function Home() {
     </div>
 
     <div className="card">
-      <h2>Seus Investimentos</h2>
+  <h2>Seus Investimentos</h2>
 
-      <ul className="lista">
-        {investimentos.map(inv => (
-          <li key={inv.id} className="item">
-            <div>
-              <strong>{inv.nome}</strong><br />
-              {inv.quantidade} cotas
-            </div>
+  <div className="resumo">
+    <div>Total investido</div>
+    <strong>R$ {totalInvestido.toFixed(2)}</strong>
+  </div>
 
-            <div className="valor">
-              R$ {totalInvestido.toFixed(2)}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+  <ul className="lista">
+    {investimentos.map(inv => (
+      <li key={inv.id} className="item">
+        <div>
+          <strong>{inv.nome}</strong><br />
+          <span>{inv.quantidade} cotas</span>
+        </div>
+
+        <div className="valor">
+          R$ {inv.valor_total.toFixed(2)}
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
 
   </div>
 );

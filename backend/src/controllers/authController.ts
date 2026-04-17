@@ -79,7 +79,8 @@ export const login = async (req: Request, res: Response) => {
       user,
     });
 
-  } catch (error) {
-    return res.status(500).json({ message: "Erro no login", error });
+  } catch (error: any) {
+    console.error("Erro login:", error);
+    return res.status(500).json({ message: "Erro interno no servidor" });
   }
 };

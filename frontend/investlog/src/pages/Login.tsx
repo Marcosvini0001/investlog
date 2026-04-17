@@ -12,7 +12,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
+      const response = await axios.post("http://localhost:3001/auth/login", {
         email,
         senha,
       });
@@ -20,8 +20,7 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
 
       alert("Login realizado com sucesso!");
-
-      navigate("/investimentos");
+      navigate("/home");
 
     } catch (error: any) {
       alert(error.response?.data?.message || "Erro no login");
@@ -29,34 +28,43 @@ export default function Login() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Login</h2>
+    <div className="container">
+      <div className="header">
+        <div className="logo">
+          <span>INVEST</span><span>LOG</span>
+        </div>
+        <div className="subtitle">
+          Controle seus investimentos com segurança
+        </div>
+      </div>
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <div className="card">
+        <h2>Login</h2>
 
-        <br /><br />
+        <form onSubmit={handleLogin} className="form">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
 
-        <br /><br />
+          <button type="submit" className="button">
+            Entrar
+          </button>
+        </form>
 
-        <button type="submit">Entrar</button>
-      </form>
-
-      <p>
-        Não tem conta? <Link to="/register">Cadastrar</Link>
-      </p>
+        <p style={{ marginTop: "15px", textAlign: "center" }}>
+          Não tem conta? <Link to="/register">Cadastrar</Link>
+        </p>
+      </div>
     </div>
   );
 }
