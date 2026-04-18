@@ -37,7 +37,7 @@ export default function InvestimentoForm({ onSalvar }: Props) {
   <div className="form">
     <h2>Novo Investimento</h2>
 
-    <input name="nome" placeholder="Nome" onChange={handleChange} />
+    <input name="nome" placeholder="Nome" value={form.nome} onChange={handleChange} />
     <select name="tipo" value={form.tipo} onChange={handleChange}>
       <option value="acao">Ação</option>
       <option value="fii">FII</option>
@@ -46,8 +46,8 @@ export default function InvestimentoForm({ onSalvar }: Props) {
       <option value="cdb">CDB</option>
       <option value="outro">Outro</option>
     </select>
-    <input name="quantidade" placeholder="Quantidade" type='number' onChange={handleChange} />
-    <input name="valor_unitario" placeholder="Valor unitário" type='number' onChange={handleChange} />
+    <input name="quantidade" placeholder="Quantidade" type='number' value={form.quantidade} onChange={handleChange} />
+    <input name="valor_unitario" placeholder="Valor unitário" type='number' value={form.valor_unitario} onChange={handleChange} />
     <p>Valor total: R$ {valorTotal.toFixed(2)}</p>
 
     <button

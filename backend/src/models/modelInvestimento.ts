@@ -6,7 +6,9 @@ export class Investimento extends Model {
   public id!: number;
   public userId!: number;
   public nome!: string;
+  public tipo!: string;
   public quantidade!: number;
+  public valor_unitario!: number;
   public valor_total!: number;
 }
 
@@ -29,8 +31,17 @@ Investimento.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    tipo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "acao",
+    },
     quantidade: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    valor_unitario: {
+      type: DataTypes.DECIMAL(15, 2),
       allowNull: false,
     },
     valor_total: {
