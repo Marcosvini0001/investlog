@@ -13,7 +13,7 @@ export const criarInvestimento = async (req: Request, res: Response) => {
     const valor_total = Number(quantidade) * Number(valor_unitario);
 
     const investimento = await Investimento.create({
-      userId,
+      userId: req.userId,
       nome,
       tipo,
       quantidade,
@@ -33,7 +33,9 @@ export const listarInvestimentos = async (req: Request, res: Response) => {
     const userId = req.userId;
 
     const investimentos = await Investimento.findAll({
-      where: { userId },
+      where: { 
+        userId: req.userId
+       },
     });
 
     return res.json(investimentos);

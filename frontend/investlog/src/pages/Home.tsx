@@ -44,8 +44,8 @@ export default function Home() {
       <InvestimentoForm onSalvar={salvar} />
     </div>
 
-    <div className="card">
-  <h2>Seus Investimentos</h2>
+  <div className="card">
+    <h2>Seus Investimentos</h2>
 
   <div className="resumo">
     <div>Total investido</div>
@@ -63,10 +63,14 @@ export default function Home() {
         <div className="valor">
           R$ {Number(inv.valor_total).toFixed(2)}
         </div>
+        <div className='icons'> {/* CORRIGIR BOTOES */}
+          <button onClick={() => {}}>Editar</button>
+          <button onClick={() => {}}>Excluir</button>
+        </div>
       </li>
     ))}
   </ul>
-</div>
+  </div>
 
   </div>
 );
