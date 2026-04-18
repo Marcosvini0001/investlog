@@ -37,10 +37,19 @@ export default function Register() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Cadastro</h2>
+    <div className="container">
+      <div className="header">
+        <div className="logo">
+          <span>INVEST</span><span>LOG</span>
+        </div>
+        <div className="subtitle">
+          Controle seus investimentos com segurança
+        </div>
+      </div>
 
-      <form onSubmit={handleRegister}>
+    <div className="card">
+        <h2>Cadastro</h2>
+      <form onSubmit={handleRegister} className="form">
         <input
           type="text"
           placeholder="Nome"
@@ -86,12 +95,14 @@ export default function Register() {
 
         <br /><br />
 
-        <button type="submit">Cadastrar</button>
+        <button type="submit" className="button">Cadastrar</button>
       </form>
 
-      <p>
+      <p style={{ marginTop: "15px", textAlign: "center" }}>
         Já tem conta? <Link to="/">Login</Link>
       </p>
+    </div>
+
     </div>
   );
 }

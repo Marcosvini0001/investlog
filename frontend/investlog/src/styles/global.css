@@ -75,6 +75,35 @@ body {
   border: 1px solid var(--primary);
 }
 
+.form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--bg-dark);
+  color: var(--secondary);
+  transition: 0.2s;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
+  /* remove estilo padrão do navegador */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  cursor: pointer;
+}
+
+/* foco igual input */
+.form select:focus {
+  outline: none;
+  border: 1px solid var(--primary);
+}
+
 /* botão principal vermelho */
 .button {
   width: 100%;
@@ -157,6 +186,8 @@ h2 {
 .resumo strong {
   color: var(--primary);
 }
+
+
 
 /* animação */
 @keyframes fadeIn {

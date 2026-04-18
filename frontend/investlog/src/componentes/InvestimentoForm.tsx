@@ -19,7 +19,7 @@ export default function InvestimentoForm({ onSalvar }: Props) {
     valor_unitario: 0
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     setForm({
@@ -38,6 +38,14 @@ export default function InvestimentoForm({ onSalvar }: Props) {
     <h2>Novo Investimento</h2>
 
     <input name="nome" placeholder="Nome" onChange={handleChange} />
+    <select name="tipo" value={form.tipo} onChange={handleChange}>
+      <option value="acao">Ação</option>
+      <option value="fii">FII</option>
+      <option value="cripto">Criptomoeda</option>
+      <option value="tesouro">Tesouro Direto</option>
+      <option value="cdb">CDB</option>
+      <option value="outro">Outro</option>
+    </select>
     <input name="quantidade" placeholder="Quantidade" type='number' onChange={handleChange} />
     <input name="valor_unitario" placeholder="Valor unitário" type='number' onChange={handleChange} />
     <p>Valor total: R$ {valorTotal.toFixed(2)}</p>
