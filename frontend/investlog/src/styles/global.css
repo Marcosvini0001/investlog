@@ -116,6 +116,12 @@ body {
   filter: brightness(1.1);
 }
 
+.logout-button {
+  width: auto;
+  padding: 10px 18px;
+  margin-bottom: 20px;
+}
+
 a {
   color: var(--primary);
   text-decoration: none;

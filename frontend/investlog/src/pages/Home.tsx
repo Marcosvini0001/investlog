@@ -1,9 +1,11 @@
 ﻿import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import InvestimentoForm from "../componentes/InvestimentoForm";
 import { Investimento, InvestimentoInput } from "../types/Investimento";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
   const [view, setView] = useState<"ultimos" | "geral">("ultimos");
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -11,6 +13,17 @@ export default function Home() {
     quantidade: 0,
     valor_unitario: 0,
   });
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   const investimentosAgrupados = useMemo(() => {
     const agrupado: Record<
@@ -124,6 +137,14 @@ export default function Home() {
         </div>
         <div className="subtitle">Controle inteligente de investimentos</div>
       </div>
+
+      <button
+        type="button"
+        className="button logout-button"
+        onClick={handleLogout}
+      >
+        Sair
+      </button>
 
       <div className="card">
         <InvestimentoForm onSalvar={salvar} />

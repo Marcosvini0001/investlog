@@ -17,7 +17,7 @@ export default function Login() {
         senha,
       });
 
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem("token", res.data.token);
       alert("Login realizado com sucesso!");
       navigate("/home");
     } catch (error: any) {
@@ -29,7 +29,8 @@ export default function Login() {
     <div className="container">
       <div className="header">
         <div className="logo">
-          <span>INVEST</span><span>LOG</span>
+          <span>INVEST</span>
+          <span>LOG</span>
         </div>
         <div className="subtitle">
           Controle seus investimentos com segurança
