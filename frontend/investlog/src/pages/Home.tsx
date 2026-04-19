@@ -1,15 +1,40 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import api from "../services/api";
 import InvestimentoForm from "../componentes/InvestimentoForm";
 import { Investimento, InvestimentoInput } from "../types/Investimento";
 
 export default function Home() {
   const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
+  const [view, setView] = useState<"ultimos" | "geral">("ultimos");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingData, setEditingData] = useState({
     quantidade: 0,
     valor_unitario: 0,
   });
+
+  const investimentosAgrupados = useMemo(() => {
+    const agrupado: Record<
+      string,
+      { nome: string; tipo: string; quantidade: number; valor_total: number }
+    > = {};
+
+    investimentos.forEach((inv) => {
+      const key = `${inv.nome.toUpperCase()}|${inv.tipo}`;
+      if (!agrupado[key]) {
+        agrupado[key] = {
+          nome: inv.nome,
+          tipo: inv.tipo,
+          quantidade: Number(inv.quantidade),
+          valor_total: Number(inv.valor_total),
+        };
+      } else {
+        agrupado[key].quantidade += Number(inv.quantidade);
+        agrupado[key].valor_total += Number(inv.valor_total);
+      }
+    });
+
+    return Object.values(agrupado);
+  }, [investimentos]);
 
   const carregar = async () => {
     const res = await api.get("/investimentos");
@@ -112,70 +137,132 @@ export default function Home() {
           <strong>R$ {totalInvestido.toFixed(2)}</strong>
         </div>
 
-        <ul className="lista">
-          {investimentos.map((inv) => (
-            <li key={inv.id} className="item">
-              <div>
-                <strong>{inv.nome}</strong>
-                <br />
-                <span>{inv.quantidade} cotas</span>
-              </div>
+        <div className="view-buttons">
+          <button
+            className={`view-button ${view === "ultimos" ? "active" : ""}`}
+            onClick={() => setView("ultimos")}
+          >
+            Últimos
+          </button>
+          <button
+            className={`view-button ${view === "geral" ? "active" : ""}`}
+            onClick={() => setView("geral")}
+          >
+            Geral
+          </button>
+        </div>
 
-              <div className="valor">
-                R$ {Number(inv.valor_total).toFixed(2)}
-              </div>
-
-              {editingId === inv.id ? (
-                <div className="editar-bloco">
-                  <input
-                    type="number"
-                    value={editingData.quantidade}
-                    min={0}
-                    onChange={(e) =>
-                      setEditingData({
-                        ...editingData,
-                        quantidade: Number(e.target.value),
-                      })
-                    }
-                  />
-                  <input
-                    type="number"
-                    value={editingData.valor_unitario}
-                    min={0}
-                    step={0.01}
-                    onChange={(e) =>
-                      setEditingData({
-                        ...editingData,
-                        valor_unitario: Number(e.target.value),
-                      })
-                    }
-                  />
-                  <button
-                    className="salvar"
-                    onClick={() => salvarEdicao(inv.id)}
-                  >
-                    Salvar
-                  </button>
-                  <button className="cancelar" onClick={cancelarEdicao}>
-                    Cancelar
-                  </button>
-                </div>
-              ) : (
-                <div className="icons">
-                  <button className="editar" onClick={() => iniciarEdicao(inv)}>
-                    Editar
-                  </button>
-                  <button
-                    className="excluir"
-                    onClick={() => excluirInvestimento(inv.id)}
-                  >
-                    Excluir
-                  </button>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+        {view === "ultimos" ? (
+          <div className="tabela-wrapper">
+            <h3>Últimos investimentos</h3>
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Tipo</th>
+                  <th>Quantidade</th>
+                  <th>Valor unitário</th>
+                  <th>Valor total</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {investimentos
+                  .slice()
+                  .reverse()
+                  .map((inv) => (
+                    <tr key={inv.id}>
+                      <td>{inv.nome}</td>
+                      <td>{inv.tipo.toUpperCase()}</td>
+                      <td>{inv.tipo === "cdb" ? "-" : inv.quantidade}</td>
+                      <td>R$ {Number(inv.valor_unitario).toFixed(2)}</td>
+                      <td>R$ {Number(inv.valor_total).toFixed(2)}</td>
+                      <td>
+                        {editingId === inv.id ? (
+                          <div className="editar-bloco">
+                            <input
+                              type="number"
+                              value={editingData.quantidade}
+                              min={0}
+                              onChange={(e) =>
+                                setEditingData({
+                                  ...editingData,
+                                  quantidade: Number(e.target.value),
+                                })
+                              }
+                            />
+                            <input
+                              type="number"
+                              value={editingData.valor_unitario}
+                              min={0}
+                              step={0.01}
+                              onChange={(e) =>
+                                setEditingData({
+                                  ...editingData,
+                                  valor_unitario: Number(e.target.value),
+                                })
+                              }
+                            />
+                            <button
+                              className="salvar"
+                              onClick={() => salvarEdicao(inv.id)}
+                            >
+                              Salvar
+                            </button>
+                            <button
+                              className="cancelar"
+                              onClick={cancelarEdicao}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="icons">
+                            <button
+                              className="editar"
+                              onClick={() => iniciarEdicao(inv)}
+                            >
+                              Editar
+                            </button>
+                            <button
+                              className="excluir"
+                              onClick={() => excluirInvestimento(inv.id)}
+                            >
+                              Excluir
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="tabela-wrapper">
+            <h3>Geral - posição consolidada</h3>
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Tipo</th>
+                  <th>Quantidade total</th>
+                  <th>Valor total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {investimentosAgrupados.map((inv) => (
+                  <tr key={`${inv.nome}-${inv.tipo}`}>
+                    <td>{inv.nome}</td>
+                    <td>{inv.tipo.toUpperCase()}</td>
+                    <td>{inv.tipo === "cdb" ? "-" : inv.quantidade}</td>
+                    <td>R$ {inv.valor_total.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
