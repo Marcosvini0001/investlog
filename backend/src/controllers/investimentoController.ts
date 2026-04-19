@@ -1,5 +1,5 @@
 ﻿import { Request, Response } from "express";
-import { Investimento } from "../models/modelInvestimento";
+import { Investimento, User } from "../models/modelInvestimento";
 
 export const criarInvestimento = async (req: Request, res: Response) => {
   try {
@@ -37,6 +37,31 @@ export const listarInvestimentos = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error("Erro ao listar investimentos:", error);
     return res.status(500).json({ message: "Erro ao listar investimentos" });
+  }
+};
+
+export const getUserInvestmentsSummary = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.userId },
+      include: [{
+        model: Investimento,
+        as: 'investments',
+        attributes: ['nome', 'valor_total']
+      }]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    return res.json({
+      user: user.nome,
+      investments: user.investments
+    });
+  } catch (error: any) {
+    console.error("Erro ao obter resumo de investimentos:", error);
+    return res.status(500).json({ message: "Erro ao obter resumo de investimentos" });
   }
 };
 

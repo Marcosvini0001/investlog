@@ -29,8 +29,7 @@ export default function Register() {
 
       alert("Cadastro realizado com sucesso!");
 
-      navigate("/"); 
-
+      navigate("/");
     } catch (error: any) {
       alert(error.response?.data?.message || "Erro ao cadastrar");
     }
@@ -40,69 +39,76 @@ export default function Register() {
     <div className="container">
       <div className="header">
         <div className="logo">
-          <span>INVEST</span><span>LOG</span>
+          <span>INVEST</span>
+          <span>LOG</span>
         </div>
         <div className="subtitle">
           Controle seus investimentos com segurança
         </div>
       </div>
 
-    <div className="card">
+      <div className="card">
         <h2>Cadastro</h2>
-      <form onSubmit={handleRegister} className="form">
-        <input
-          type="text"
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
+        <form onSubmit={handleRegister} className="form">
+          <input
+            type="text"
+            placeholder="Nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
 
-        <br /><br />
+          <br />
+          <br />
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <br /><br />
+          <br />
+          <br />
 
-        <input
-          type="text"
-          placeholder="Telefone"
-          value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Telefone"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
+          />
 
-        <br /><br />
+          <br />
+          <br />
 
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
 
-        <br /><br />
+          <br />
+          <br />
 
-        <input
-          type="password"
-          placeholder="Confirmar Senha"
-          value={confirmarSenha}
-          onChange={(e) => setConfirmarSenha(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Confirmar Senha"
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+          />
 
-        <br /><br />
+          <br />
+          <br />
 
-        <button type="submit" className="button">Cadastrar</button>
-      </form>
+          <button type="submit" className="button">
+            Cadastrar
+          </button>
+        </form>
 
-      <p style={{ marginTop: "15px", textAlign: "center" }}>
-        Já tem conta? <Link to="/">Login</Link>
-      </p>
-    </div>
-
+        <p style={{ marginTop: "15px", textAlign: "center" }}>
+          Já tem conta? <Link to="/">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }
