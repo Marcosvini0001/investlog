@@ -138,14 +138,6 @@ export default function Home() {
         <div className="subtitle">Controle inteligente de investimentos</div>
       </div>
 
-      <button
-        type="button"
-        className="button logout-button"
-        onClick={handleLogout}
-      >
-        Sair
-      </button>
-
       <div className="card">
         <InvestimentoForm onSalvar={salvar} />
       </div>
@@ -285,6 +277,13 @@ export default function Home() {
           </div>
         )}
       </div>
+      <button
+        type="button"
+        className="button logout-button"
+        onClick={handleLogout}
+      >
+        Sair
+      </button>
     </div>
   );
 }

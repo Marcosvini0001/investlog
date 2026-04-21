@@ -1,13 +1,8 @@
 import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize(process.env.MYSQL_URL as string, {
+const sequelize = new Sequelize('financeiro', 'root', '', {
+  host: 'localhost',
   dialect: 'mysql',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
   logging: false,
 });
 
