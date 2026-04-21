@@ -4,9 +4,7 @@ import investimentoRoutes from './routes/investimentoRoutes';
 import authRoutes from "./routes/authRoutes";
 import sequelize from './config/database';
 import './models/modelUsers';
-import './models/modelConta';
 import './models/modelInvestimento';
-import './models/modelVenda';
 
 const app = express();
 
