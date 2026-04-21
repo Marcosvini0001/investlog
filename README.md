@@ -28,7 +28,7 @@ Frontend (React) → Backend (API Node.js) → Banco de Dados (MySQL)
 ## 🔌 Como rodar localmente
 
 1. Clone o repositório:
-   git clone https://github.com/seu-usuario/investlog.git
+   git clone https://github.com/Marcosvini0001/investlog
 
 2. Crie o banco:
    CREATE DATABASE financeiro;
