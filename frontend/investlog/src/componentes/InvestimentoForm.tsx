@@ -52,7 +52,6 @@ export default function InvestimentoForm({ onSalvar }: Props) {
         <option value="outro">Outro</option>
       </select>
 
-      {/* SE FOR CDB → MOSTRA MENOS CAMPOS */}
       {form.tipo === "cdb" && (
         <>
           <input
@@ -71,7 +70,6 @@ export default function InvestimentoForm({ onSalvar }: Props) {
         </>
       )}
 
-      {/* OUTROS TIPOS */}
       {["acao", "fii", "cripto", "tesouro", "outro"].includes(form.tipo) && (
         <>
           <input

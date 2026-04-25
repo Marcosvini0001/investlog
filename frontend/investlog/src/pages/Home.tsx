@@ -7,7 +7,7 @@ import { Investimento, InvestimentoInput } from "../types/Investimento";
 export default function Home() {
   const navigate = useNavigate();
   const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-  const [view, setView] = useState<"ultimos" | "geral">("ultimos");
+  const [view, setView] = useState<"ultimos" | "geral" | "vendas">("ultimos");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingData, setEditingData] = useState({
     quantidade: 0,
@@ -123,6 +123,25 @@ export default function Home() {
     }
   };
 
+  const baixarPDF = async () => {
+    try {
+      const response = await api.get("/investimentos/exportar", {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.setAttribute("download", "investimentos.pdf");
+
+      document.body.appendChild(link);
+      link.click();
+    } catch (err) {
+      alert("Erro ao baixar PDF");
+    }
+  };
+
   const totalInvestido = investimentos.reduce((acc, inv) => {
     const valor = Number(inv.valor_total);
     return acc + (isNaN(valor) ? 0 : valor);
@@ -152,16 +171,24 @@ export default function Home() {
 
         <div className="view-buttons">
           <button
+            className={`view-button ${view === "geral" ? "active" : ""}`}
+            onClick={() => setView("geral")}
+          >
+            Geral
+          </button>
+
+          <button
             className={`view-button ${view === "ultimos" ? "active" : ""}`}
             onClick={() => setView("ultimos")}
           >
             Últimos
           </button>
+
           <button
-            className={`view-button ${view === "geral" ? "active" : ""}`}
-            onClick={() => setView("geral")}
+            className={`view-button ${view === "vendas" ? "active" : ""}`}
+            onClick={() => setView("vendas")}
           >
-            Geral
+            Vendas
           </button>
         </div>
 
@@ -241,7 +268,7 @@ export default function Home() {
                               className="excluir"
                               onClick={() => excluirInvestimento(inv.id)}
                             >
-                              Excluir
+                              Vender
                             </button>
                           </div>
                         )}
@@ -283,6 +310,10 @@ export default function Home() {
         onClick={handleLogout}
       >
         Sair
+      </button>
+
+      <button className="button" onClick={baixarPDF}>
+        Baixar PDF
       </button>
     </div>
   );

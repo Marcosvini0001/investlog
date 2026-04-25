@@ -10,6 +10,9 @@ export class Investimento extends Model {
   public quantidade!: number;
   public valor_unitario!: number;
   public valor_total!: number;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Investimento.init(
@@ -22,10 +25,6 @@ Investimento.init(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: User,
-        key: "id",
-      },
     },
     nome: {
       type: DataTypes.STRING,
@@ -56,4 +55,4 @@ Investimento.init(
 );
 
 Investimento.belongsTo(User, { foreignKey: "userId" });
-User.hasMany(Investimento, { foreignKey: "userId" });
+User.hasMany(Investimento, { foreignKey: "userId", as: "investments" });

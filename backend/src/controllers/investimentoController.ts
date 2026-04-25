@@ -1,5 +1,6 @@
 ﻿import { Request, Response } from "express";
 import { Investimento, User } from "../models/modelInvestimento";
+import PDFDocument from 'pdfkit';
 
 export const criarInvestimento = async (req: Request, res: Response) => {
   try {
@@ -113,5 +114,70 @@ export const excluirInvestimento = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error("Erro ao excluir investimento:", error);
     return res.status(500).json({ message: "Erro ao excluir investimento" });
+  }
+};
+
+export const exportarPDF = async (req: Request, res: Response) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const investimentos = await Investimento.findAll({
+      where: { userId },
+    });
+
+    const doc = new PDFDocument();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=investimentos.pdf"
+    );
+
+    doc.pipe(res);
+
+    // 🔥 TÍTULO
+    doc.fontSize(22).text("INVESTLOG", { align: "center" });
+    doc.fontSize(14).text("Relatório de Investimentos", {
+      align: "center",
+    });
+
+    doc.moveDown();
+
+    let totalGeral = 0;
+
+    investimentos.forEach((inv, index) => {
+      const valorTotal = Number(inv.valor_total);
+      const valorUnit = Number(inv.valor_unitario);
+
+      totalGeral += valorTotal;
+
+      doc
+        .fontSize(12)
+        .text(`${index + 1}. ${inv.nome}`, { underline: true })
+        .text(`Quantidade: ${inv.quantidade}`)
+        .text(`Valor unitário: R$ ${valorUnit.toFixed(2)}`)
+        .text(`Valor total: R$ ${valorTotal.toFixed(2)}`)
+        .text(
+          `Data: ${new Date(inv.createdAt).toLocaleDateString("pt-BR")}`
+        )
+        .moveDown();
+    });
+
+    // 🔥 TOTAL FINAL
+    doc.moveDown();
+    doc
+      .fontSize(14)
+      .text(`Total investido: R$ ${totalGeral.toFixed(2)}`, {
+        align: "right",
+      });
+
+    doc.end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao gerar PDF" });
   }
 };
