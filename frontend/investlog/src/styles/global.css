@@ -252,13 +252,13 @@ h2 {
   display: flex;
   gap: 10px;
   align-items: center;
+}
 
-  input{
-    width: 80px;
-    padding: 6px;
-    border-radius: 10px;
-    border: none;
-  }
+.editar-bloco input {
+  width: 80px;
+  padding: 6px;
+  border-radius: 10px;
+  border: none;
 }
 
 .icons{
@@ -289,4 +289,161 @@ h2 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* =========================
+   RESPONSIVIDADE MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .container {
+    width: 100%;
+    padding: 14px;
+    margin: 20px auto;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .logo {
+    font-size: 2rem;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    margin-top: 6px;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .resumo {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .view-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .view-button {
+    flex: 1;
+    min-width: 100px;
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  /* =========================
+     TABELA RESPONSIVA
+  ========================= */
+
+  .tabela-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .tabela {
+    min-width: 700px;
+  }
+
+  .tabela th,
+  .tabela td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  /* =========================
+     EDIÇÃO
+  ========================= */
+
+  .editar-bloco {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .editar-bloco input {
+    width: 100%;
+  }
+
+  .icons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .editar,
+  .excluir,
+  .cancelar,
+  .salvar {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  /* =========================
+     BOTÕES
+  ========================= */
+
+  .button {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .logout-button {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  /* =========================
+     FORMULÁRIO
+  ========================= */
+
+  .form input,
+  .form select {
+    font-size: 16px;
+  }
+
+}
+
+/* =========================
+   TELAS MUITO PEQUENAS
+========================= */
+
+@media (max-width: 480px) {
+
+  .logo {
+    font-size: 1.7rem;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .view-buttons {
+    flex-direction: column;
+  }
+
+  .view-button {
+    width: 100%;
+  }
+
+  .resumo {
+    font-size: 0.85rem;
+  }
+
+  .tabela th,
+  .tabela td {
+    font-size: 0.78rem;
+  }
+
 }
