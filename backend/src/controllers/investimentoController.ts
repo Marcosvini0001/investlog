@@ -1,5 +1,6 @@
 ﻿import { Request, Response } from "express";
 import { Investimento, User } from "../models/modelInvestimento";
+import { Venda } from "../models/modelVenda";
 import PDFDocument from 'pdfkit';
 
 export const criarInvestimento = async (req: Request, res: Response) => {
@@ -114,6 +115,85 @@ export const excluirInvestimento = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error("Erro ao excluir investimento:", error);
     return res.status(500).json({ message: "Erro ao excluir investimento" });
+  }
+};
+
+export const venderInvestimento = async (req: Request, res: Response) => {
+  try {
+    const investimentoId = Number(req.params.id);
+
+    const investimento = await Investimento.findOne({
+      where: { id: investimentoId, userId: req.userId },
+    });
+
+    if (!investimento) {
+      return res.status(404).json({ message: "Investimento não encontrado" });
+    }
+
+    const quantidade = Number(investimento.quantidade);
+    const valor_unitario = Number(investimento.valor_unitario);
+    const valor_total = quantidade * valor_unitario;
+    const movimento = investimento.tipo === "cdb" ? "retirada" : "venda";
+
+    const venda = await Venda.create({
+      userId: req.userId,
+      investimentoId,
+      nome: investimento.nome,
+      tipo: investimento.tipo,
+      movimento,
+      quantidade,
+      valor_unitario,
+      valor_total,
+    });
+
+    await investimento.destroy();
+
+    return res.status(201).json({ message: "Venda registrada", venda });
+  } catch (error: any) {
+    console.error("Erro ao registrar venda:", error);
+    return res.status(500).json({ message: "Erro ao registrar venda" });
+  }
+};
+
+export const listarVendas = async (req: Request, res: Response) => {
+  try {
+    const vendas = await Venda.findAll({
+      where: { userId: req.userId },
+      order: [["createdAt", "DESC"]],
+    });
+
+    return res.json(vendas);
+  } catch (error: any) {
+    console.error("Erro ao listar vendas:", error);
+    return res.status(500).json({ message: "Erro ao listar vendas" });
+  }
+};
+
+export const getVendasSummary = async (req: Request, res: Response) => {
+  try {
+    const vendas = await Venda.findAll({
+      where: { userId: req.userId },
+    });
+
+    const totalVendas = vendas
+      .filter((v) => v.movimento === "venda")
+      .reduce((acc, v) => acc + Number(v.valor_total), 0);
+
+    const totalRetiradas = vendas
+      .filter((v) => v.movimento === "retirada")
+      .reduce((acc, v) => acc + Number(v.valor_total), 0);
+
+    const totalGeral = vendas.reduce((acc, v) => acc + Number(v.valor_total), 0);
+
+    return res.json({
+      vendas,
+      totalVendas,
+      totalRetiradas,
+      totalGeral,
+    });
+  } catch (error: any) {
+    console.error("Erro ao obter resumo de vendas:", error);
+    return res.status(500).json({ message: "Erro ao obter resumo de vendas" });
   }
 };
 

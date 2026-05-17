@@ -5,6 +5,8 @@ import authRoutes from "./routes/authRoutes";
 import sequelize from './config/database';
 import './models/modelUsers';
 import './models/modelInvestimento';
+import './models/modelVenda';
+import './models/modelConta';
 
 const app = express();
 

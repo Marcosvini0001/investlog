@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import InvestimentoForm from "../componentes/InvestimentoForm";
-import { Investimento, InvestimentoInput } from "../types/Investimento";
+import { Investimento, InvestimentoInput, Venda } from "../types/Investimento";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function Home() {
     quantidade: 0,
     valor_unitario: 0,
   });
+  const [vendas, setVendas] = useState<Venda[]>([]);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -54,9 +55,20 @@ export default function Home() {
     setInvestimentos(res.data);
   };
 
+  const carregarVendas = async () => {
+    const res = await api.get("/investimentos/vendas");
+    setVendas(res.data);
+  };
+
   useEffect(() => {
     carregar();
   }, []);
+
+  useEffect(() => {
+    if (view === "vendas") {
+      carregarVendas();
+    }
+  }, [view]);
 
   const salvar = async (dados: InvestimentoInput) => {
     try {
@@ -114,12 +126,40 @@ export default function Home() {
 
       await api.delete(`/investimentos/${id}`);
       carregar();
+      if (view === "vendas") {
+        carregarVendas();
+      }
     } catch (error: any) {
       console.error(
         "Erro ao excluir investimento:",
         error.response?.data || error.message,
       );
       alert(error.response?.data?.message || "Erro ao excluir investimento");
+    }
+  };
+
+  const venderInvestimento = async (inv: Investimento) => {
+    try {
+      const confirmMessage =
+        inv.tipo === "cdb"
+          ? "Deseja registrar a retirada deste CDB?"
+          : "Deseja vender este investimento?";
+
+      if (!window.confirm(confirmMessage)) {
+        return;
+      }
+
+      await api.post(`/investimentos/${inv.id}/vender`);
+      carregar();
+      if (view === "vendas") {
+        carregarVendas();
+      }
+    } catch (error: any) {
+      console.error(
+        "Erro ao vender investimento:",
+        error.response?.data || error.message,
+      );
+      alert(error.response?.data?.message || "Erro ao vender investimento");
     }
   };
 
@@ -146,6 +186,19 @@ export default function Home() {
     const valor = Number(inv.valor_total);
     return acc + (isNaN(valor) ? 0 : valor);
   }, 0);
+
+  const totalVendas = vendas.reduce((acc, venda) => {
+    const valor = Number(venda.valor_total);
+    return acc + (isNaN(valor) ? 0 : valor);
+  }, 0);
+
+  const totalRetiradas = vendas
+    .filter((venda) => venda.movimento === "retirada")
+    .reduce((acc, venda) => acc + Number(venda.valor_total), 0);
+
+  const totalVendasOperacao = vendas
+    .filter((venda) => venda.movimento === "venda")
+    .reduce((acc, venda) => acc + Number(venda.valor_total), 0);
 
   return (
     <div className="container">
@@ -266,9 +319,9 @@ export default function Home() {
                             </button>
                             <button
                               className="excluir"
-                              onClick={() => excluirInvestimento(inv.id)}
+                              onClick={() => venderInvestimento(inv)}
                             >
-                              Vender
+                              {inv.tipo === "cdb" ? "Retirar" : "Vender"}
                             </button>
                           </div>
                         )}
@@ -278,7 +331,7 @@ export default function Home() {
               </tbody>
             </table>
           </div>
-        ) : (
+        ) : view === "geral" ? (
           <div className="tabela-wrapper">
             <h3>Geral - posição consolidada</h3>
             <table className="tabela">
@@ -297,6 +350,48 @@ export default function Home() {
                     <td>{inv.tipo.toUpperCase()}</td>
                     <td>{inv.tipo === "cdb" ? "-" : inv.quantidade}</td>
                     <td>R$ {inv.valor_total.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="tabela-wrapper">
+            <h3>Histórico de vendas e retiradas</h3>
+            <div className="resumo">
+              <div>Total de vendas</div>
+              <strong>R$ {totalVendasOperacao.toFixed(2)}</strong>
+            </div>
+            <div className="resumo">
+              <div>Total de retiradas (CDB)</div>
+              <strong>R$ {totalRetiradas.toFixed(2)}</strong>
+            </div>
+            <div className="resumo">
+              <div>Total geral</div>
+              <strong>R$ {totalVendas.toFixed(2)}</strong>
+            </div>
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Tipo</th>
+                  <th>Movimento</th>
+                  <th>Quantidade</th>
+                  <th>Valor unitário</th>
+                  <th>Valor total</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vendas.map((venda) => (
+                  <tr key={venda.id}>
+                    <td>{venda.nome}</td>
+                    <td>{venda.tipo.toUpperCase()}</td>
+                    <td>{venda.movimento.toUpperCase()}</td>
+                    <td>{venda.tipo === "cdb" ? "-" : venda.quantidade}</td>
+                    <td>R$ {Number(venda.valor_unitario).toFixed(2)}</td>
+                    <td>R$ {Number(venda.valor_total).toFixed(2)}</td>
+                    <td>{new Date(venda.createdAt).toLocaleDateString("pt-BR")}</td>
                   </tr>
                 ))}
               </tbody>
